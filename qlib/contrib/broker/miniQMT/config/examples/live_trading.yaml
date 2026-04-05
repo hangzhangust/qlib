@@ -1,0 +1,46 @@
+# Example: Live trading configuration with miniQMT
+#
+# This is a reference config for the TradingLoop. It's not directly consumed
+# by qrun, but shows how to configure live trading components.
+#
+# Usage in Python:
+#   from qlib.contrib.broker.miniQMT.trader.trading_loop import TradingLoop
+#
+#   loop = TradingLoop(
+#       mini_qmt_path="D:/国金证券QMT交易端/userdata_mini",
+#       account_id="1234567890",
+#       order_timeout=60.0,
+#   )
+#   loop.connect()
+#
+#   # Run strategy to get target weights, then execute:
+#   target_positions = {"SH600000": 0.05, "SZ000001": 0.05}
+#   results = loop.run_once(target_positions=target_positions)
+
+# miniQMT connection settings
+miniQMT:
+    mini_qmt_path: "D:/国金证券QMT交易端/userdata_mini"
+    account_id: "1234567890"
+    order_timeout: 60.0
+
+# Trading parameters
+trading:
+    # Commission rates (adjust based on your broker)
+    open_cost: 0.00025    # Buy commission
+    close_cost: 0.00125   # Sell commission (includes stamp tax 0.1%)
+    min_cost: 5.0         # Minimum commission per trade
+    trade_unit: 100       # A-share lot size
+
+# Strategy settings (used to generate target_positions)
+strategy:
+    class: TopkDropoutStrategy
+    module_path: qlib.contrib.strategy.signal_strategy
+    kwargs:
+        topk: 30
+        n_drop: 3
+
+# Risk controls
+risk:
+    max_single_stock_weight: 0.10   # Max 10% per stock
+    max_total_exposure: 0.95        # Keep 5% cash reserve
+    check_t_plus_1: true            # Enforce T+1 selling rule
