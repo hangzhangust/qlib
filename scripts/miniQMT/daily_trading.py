@@ -90,8 +90,7 @@ def main():
         segments={"test": (today, today)},
     )
 
-    model = LGBModel()
-    model.load(args.model_path)
+    model = LGBModel.load(args.model_path)
     pred = model.predict(dataset, segment="test")
     logger.info("Predictions: %d rows", len(pred))
 

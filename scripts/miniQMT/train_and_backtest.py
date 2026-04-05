@@ -52,7 +52,7 @@ def main():
     from qlib.contrib.evaluate import backtest_daily, risk_analysis
     from qlib.contrib.model.gbdt import LGBModel
     from qlib.contrib.strategy.signal_strategy import TopkDropoutStrategy
-    from qlib.data.dataset import DatasetH, TSDatasetH
+    from qlib.data.dataset import DatasetH
 
     # 1. Init qlib
     qlib.init(provider_uri=args.provider_uri, region="cn")
@@ -111,7 +111,7 @@ def main():
     # 6. Risk analysis
     analysis = risk_analysis(report["return"] - report["bench"] - report["cost"])
     logger.info("=== Risk Analysis ===")
-    for metric, value in analysis.items():
+    for metric, value in analysis["risk"].items():
         logger.info("  %-25s: %.6f", metric, value)
 
     return report, analysis
