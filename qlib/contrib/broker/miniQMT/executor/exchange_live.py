@@ -52,8 +52,8 @@ class XtQMTLiveExchange(Exchange):
     def __init__(
         self,
         order_manager: XtOrderManager,
-        open_cost: float = 0.00025,
-        close_cost: float = 0.00125,
+        open_cost: float = 0.0005,
+        close_cost: float = 0.0015,
         min_cost: float = 5.0,
         trade_unit: int = TRADE_UNIT,
         **kwargs: Any,

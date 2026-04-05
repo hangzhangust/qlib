@@ -41,6 +41,7 @@ def parse_args():
     p.add_argument("--n-drop", type=int, default=DEFAULT_N_DROP)
     p.add_argument("--account", type=float, default=DEFAULT_ACCOUNT_AMOUNT)
     p.add_argument("--save-model", type=str, default=None, help="Path to save trained model (.pkl)")
+    p.add_argument("--output-dir", type=str, default=".", help="Directory to save report files")
     return p.parse_args()
 
 
@@ -113,6 +114,17 @@ def main():
     logger.info("=== Risk Analysis ===")
     for metric, value in analysis["risk"].items():
         logger.info("  %-25s: %.6f", metric, value)
+
+    # 7. Generate report
+    from scripts.miniQMT.report_generator import generate_html_report
+
+    html_path = generate_html_report(
+        report=report,
+        analysis=analysis,
+        output_dir=args.output_dir,
+        benchmark_name=args.benchmark,
+    )
+    logger.info("HTML report saved to %s", html_path)
 
     return report, analysis
 

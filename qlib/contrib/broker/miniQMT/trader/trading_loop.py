@@ -54,10 +54,16 @@ class TradingLoop:
         mini_qmt_path: str,
         account_id: str,
         order_timeout: float = 60.0,
+        open_cost: float = 0.0005,
+        close_cost: float = 0.0015,
+        min_cost: float = 5.0,
     ):
         self.mini_qmt_path = mini_qmt_path
         self.account_id = account_id
         self.order_timeout = order_timeout
+        self._open_cost = open_cost
+        self._close_cost = close_cost
+        self._min_cost = min_cost
 
         self.xt_trader = None
         self.callback = None
@@ -99,7 +105,12 @@ class TradingLoop:
             order_timeout=self.order_timeout,
         )
 
-        self.live_exchange = XtQMTLiveExchange(order_manager=self.order_manager)
+        self.live_exchange = XtQMTLiveExchange(
+            order_manager=self.order_manager,
+            open_cost=self._open_cost,
+            close_cost=self._close_cost,
+            min_cost=self._min_cost,
+        )
         self.position_sync = PositionSynchronizer(self.xt_trader, self.account_id)
         self.account_adapter = XtAccountAdapter(self.xt_trader, self.account_id)
 
